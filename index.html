@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Earn crypto, PayPal funds, and gift cards by completing offers and surveys">
+    <meta name="theme-color" content="#0a0a12">
+    <title>Bux IQ - Premium Rewards Platform</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/wppiqAy.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif}
+        body{background:linear-gradient(135deg,#5d7ca6,#3a5a8c);color:#000;min-height:100vh;overflow-x:hidden}
+        .wm-header{background:linear-gradient(#2c5aa0,#1e3a6b);color:#fff;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;position:fixed;top:0;width:100%;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+        .wm-header .title{font-size:18px;font-weight:bold;display:flex;align-items:center}
+        .wm-header img{height:24px;margin-right:8px}
+        .wm-content{margin:50px 0 70px;padding:12px}
+        .wm-tabs{display:flex;background:#4a6a9c;overflow-x:auto;border-radius:8px 8px 0 0}
+        .wm-tab{padding:10px 16px;background:#6b8cc0;color:#fff;cursor:pointer;white-space:nowrap;transition:all .3s}
+        .wm-tab.active{background:#8faad6;color:#000;font-weight:bold}
+        .wm-section{background:#d4dff2;border:1px solid #8faad6;border-radius:0 0 8px 8px;padding:15px;display:none;box-shadow:0 4px 8px rgba(0,0,0,.1)}
+        .wm-section.active{display:block}
+        h2{font-size:18px;color:#1e3a6b;border-bottom:1px solid #8faad6;padding-bottom:8px;margin:15px 0}
+        .wm-button{background:linear-gradient(#f0f0f0,#d4d4d4);border:1px solid #888;border-radius:6px;padding:10px 16px;display:inline-block;margin:5px 0;cursor:pointer;text-align:center;transition:.2s;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+        .wm-button.primary{background:linear-gradient(#4a6a9c,#2c4163);color:#fff;border-color:#1e3a6b}
+        .wm-button:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.2)}
+        .hidden{display:none!important}
+        .wm-status-bar{background:#4a6a9c;color:#fff;padding:8px;border-radius:6px;margin:10px 0;display:flex;justify-content:space-between;font-size:13px}
+        .wm-logs{background:#fff;border:1px solid #8faad6;border-radius:6px;height:150px;overflow-y:auto;padding:10px;font-family:monospace;font-size:12px;margin:10px 0;box-shadow:inset 0 1px 3px rgba(0,0,0,.1)}
+        .wm-list-item{padding:10px 12px;border-bottom:1px solid #d4dff2;display:flex;align-items:center}
+        .wm-list-item .icon{width:30px;height:30px;margin-right:12px;background:#4a6a9c;color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+        .wm-user-info{background:#fff;border:1px solid #8faad6;border-radius:8px;padding:15px;display:flex;align-items:center;margin:10px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+        .wm-user-avatar{width:50px;height:50px;border-radius:8px;border:2px solid #8faad6;margin-right:12px}
+        .wm-user-stats{display:flex;justify-content:space-between;margin-top:10px}
+        .wm-stat{text-align:center;flex:1;padding:5px;background:#e8eef7;border-radius:6px;margin:0 3px}
+        .wm-stat-value{font-weight:bold;font-size:18px;color:#1e3a6b}
+        .wm-stat-label{font-size:11px;color:#4a6a9c}
+        .progress-bar{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin:10px 0}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#4a6a9c,#2c5aa0);width:0%;transition:width .4s;border-radius:4px}
+        .wm-input{width:100%;padding:10px;border:1px solid #888;border-radius:6px;margin:8px 0;font-size:14px;box-shadow:inset 0 1px 3px rgba(0,0,0,.1)}
+        .wm-input:focus{outline:none;border-color:#4a6a9c}
+        .wm-captcha{background:#e8eef7;padding:12px;text-align:center;font-size:22px;letter-spacing:4px;border-radius:6px;margin:10px 0;border:1px solid #8faad6;font-family:monospace;font-weight:bold}
+        .error-message,.success-message{padding:12px;border-radius:6px;margin:10px 0;text-align:center}
+        .error-message{background:#ffebee;color:#c62828;border:1px solid #f44336}
+        .success-message{background:#e8f5e9;color:#2e7d32;border:1px solid #4caf50}
+        .wm-offer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}
+        .wm-offer-item{background:#fff;padding:15px;border-radius:8px;text-align:center;border:1px solid #8faad6;box-shadow:0 2px 6px rgba(0,0,0,.1);transition:all .3s}
+        .wm-offer-item:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(0,0,0,.2)}
+        .wm-offer-item img{max-width:100%;height:60px;object-fit:contain;margin-bottom:10px}
+        .wm-leaderboard{width:100%;background:#fff;border-radius:8px;overflow:hidden;margin:10px 0;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+        .wm-leaderboard table{width:100%;border-collapse:collapse}
+        .wm-leaderboard th{background:#4a6a9c;color:#fff;padding:12px;text-align:left;font-weight:bold}
+        .wm-leaderboard td{padding:12px;border-bottom:1px solid #d4dff2}
+        .wm-leaderboard tr:hover{background:#f0f5ff}
+        .shop-item{background:#fff;border:1px solid #8faad6;border-radius:8px;padding:15px;margin:10px 0;display:flex;align-items:center;box-shadow:0 2px 4px rgba(0,0,0,.1);cursor:pointer;transition:all .3s}
+        .shop-item:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(0,0,0,.2)}
+        .shop-item img{width:50px;height:50px;object-fit:contain;margin-right:15px}
+        .shop-item-title{font-weight:bold;color:#1e3a6b;margin-bottom:5px}
+        .shop-item-price{color:#4a6a9c;font-size:14px}
+        .wm-footer{background:linear-gradient(#2c5aa0,#1e3a6b);position:fixed;bottom:0;width:100%;height:60px;display:flex;justify-content:space-around;align-items:center;color:#fff;z-index:1000;border-top:1px solid #0f1f3a}
+        .wm-footer-button{text-align:center;cursor:pointer;padding:5px;width:70px;transition:all .2s}
+        .wm-footer-button i{font-size:18px;display:block;margin-bottom:4px}
+        .wm-footer-button.active{background:rgba(255,255,255,.2);border-radius:8px;transform:translateY(-3px)}
+        .wm-footer-button:hover{background:rgba(255,255,255,.1)}
+        .divider{text-align:center;margin:20px 0;position:relative;color:#666}
+        .divider::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:#aaa}
+        .divider span{background:#d4dff2;padding:0 15px}
+        .info-box{background:#fff9e6;border:1px solid #e6c200;border-radius:6px;padding:12px;margin:10px 0;display:flex;align-items:flex-start}
+        .info-box i{color:#e6c200;margin-right:10px;margin-top:2px}
+        @media(max-width:480px){.wm-offer-grid{grid-template-columns:1fr}.wm-footer-button{width:60px;font-size:10px}.wm-footer-button i{font-size:16px}}
+    </style>
+</head>
+<body>
+<div class="wm-header">
+    <div><i class="fas fa-bars"></i></div>
+    <div class="title"><img src="https://i.imgur.com/wppiqAy.png" alt="Logo"> Bux IQ</div>
+    <div id="headerTime">00:00</div>
+</div>
+
+<div class="wm-content">
+    <div class="wm-tabs">
+        <div class="wm-tab active" data-section="earn">Home</div>
+        <div class="wm-tab" data-section="shop">Shop</div>
+        <div class="wm-tab" data-section="leaders">Leaders</div>
+        <div class="wm-tab" data-section="profile">Earn</div>
+        <div class="wm-tab" data-section="bonus">Bonus</div>
+        <div class="wm-tab" data-section="help">Help</div>
+    </div>
+
+    <div class="wm-status-bar">
+        <div id="conversionRate"><center>$1.00 = 100 pts</center></div>
+        <div id="serverTime">Server: --:--</div>
+    </div>
+
+    <!-- HOME -->
+    <div id="section-earn" class="wm-section active">
+        <h2>Welcome to Bux IQ</h2>
+        <div class="wm-logs" id="logs">
+            <div class="wm-list-item"><div class="icon"><i class="fas fa-info-circle"></i></div><div>Loading activity...</div></div>
+        </div>
+        <div class="wm-user-info">
+            <img id="userAvatar" src="https://ui-avatars.com/api/?name=Guest&background=2c5aa0&color=fff&bold=true" class="wm-user-avatar">
+            <div style="flex:1">
+                <div id="userName" style="font-weight:bold">Guest User</div>
+                <div class="wm-user-stats">
+                    <div class="wm-stat"><div class="wm-stat-value" id="userBalance">$0.00</div><div class="wm-stat-label">Balance</div></div>
+                    <div class="wm-stat"><div class="wm-stat-value" id="userLevel">1</div><div class="wm-stat-label">Level</div></div>
+                    <div class="wm-stat"><div class="wm-stat-value" id="userPoints">0</div><div class="wm-stat-label">Points</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="levelProgress"></div></div>
+        <div style="text-align:center;margin:8px 0;font-size:12px;color:#4a6a9c">Level Progress: <span id="levelProgressText">0%</span></div>
+        <div class="wm-button primary" id="loginButton" style="width:100%">Login to Earn</div>
+        <h2>How It Works</h2>
+        <div class="wm-list">
+            <div class="wm-list-item"><div class="icon"><i class="fas fa-tasks"></i></div><div>Complete Surveys & Offers</div></div>
+            <div class="wm-list-item"><div class="icon"><i class="fas fa-star"></i></div><div>Earn Points Instantly</div></div>
+            <div class="wm-list-item"><div class="icon"><i class="fas fa-gift"></i></div><div>Redeem for Cash & Gifts</div></div>
+        </div>
+    </div>
+
+    <!-- SHOP - NOW FULLY DYNAMIC -->
+    <div id="section-shop" class="wm-section">
+        <h2>Cashout Rewards</h2>
+        <p style="text-align:center;margin-bottom:15px">Choose your payout method below</p>
+        <div id="shopContainer">
+            <div style="text-align:center;padding:30px;color:#666">Loading payout options...</div>
+        </div>
+    </div>
+
+    <!-- LEADERS -->
+    <div id="section-leaders" class="wm-section">
+        <h2>Top Earners This Week</h2>
+        <div class="wm-leaderboard">
+            <table>
+                <thead><tr><th>Rank</th><th><th>Username</th><th>Earnings</th><th>Level</th></tr></thead>
+                <tbody id="leaderboardBody"><tr><td colspan="4" style="text-align:center;padding:20px">Loading...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- EARN / LOGIN -->
+    <div id="section-profile" class="wm-section">
+        <div id="login-container">
+            <h2>Login</h2>
+            <div class="divider"><span>Secure Access</span></div>
+            <input type="text" id="login-account" class="wm-input" placeholder="Account #">
+            <input type="text" id="login-clientid" class="wm-input" placeholder="Client ID">
+            <label>CAPTCHA</label>
+            <div class="wm-captcha" id="captcha">LOADING</div>
+            <input type="text" id="captchaInput" class="wm-input" placeholder="Enter CAPTCHA">
+            <div class="wm-button primary" id="loginFormButton" style="width:100%;margin-top:15px">Login Now</div>
+            <div id="error-msg" class="error-message hidden"></div>
+        </div>
+
+        <div id="dashboard" class="hidden">
+            <h2>Earning Portal</h2>
+            <p style="text-align:center;margin-bottom:15px">Complete offers to earn money fast!</p>
+            <div class="wm-offer-grid" id="offerwall-grid">
+                <div class="wm-offer-item">
+                    <img src="https://www.cpx-research.com/main/en/assets/img/logo.svg" alt="CPX">
+                    <div class="wm-button primary" data-offer="cpx">Open CPX Research</div>
+                </div>
+                <div class="wm-offer-item">
+                    <img src="https://www.spark-wall.com/images/logo.png" alt="SparkWall">
+                    <div class="wm-button primary" data-offer="spark">Open SparkWall</div>
+                </div>
+                <div class="wm-offer-item">
+                    <img src="https://offerwallmedia.com/assets/cwdash/img/logo.png" alt="OfferWall Media">
+                    <div class="wm-button primary" data-offer="owm">Open OfferWall Media</div>
+                </div>
+                <div class="wm-offer-item">
+                    <img src="https://adgem.com/assets/img/adgem-logo.png" alt="AdGem">
+                    <div class="wm-button primary" data-offer="adgem">Open AdGem</div>
+                </div>
+            </div>
+            <div class="wm-button" id="logoutBtn" style="width:100%;margin-top:20px">Logout</div>
+        </div>
+    </div>
+
+    <!-- BONUS -->
+    <div id="section-bonus" class="wm-section">
+        <h2>Redeem Bonus Code</h2>
+        <div class="info-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>FIRST COME FIRST SERVED! Each code works only once.</div>
+        </div>
+        <input type="text" id="username" class="wm-input" placeholder="Your Username">
+        <input type="text" id="bonusCode" class="wm-input" placeholder="Enter bonus code">
+        <div class="wm-button primary" id="redeemBonusButton" style="width:100%">Redeem Now</div>
+        <input type="text" id="amountLocal" class="wm-input" readonly placeholder="Points">
+        <input type="text" id="amountUsd" class="wm-input" readonly placeholder="$0.00">
+        <div id="bonus-message" class="hidden"></div>
+    </div>
+
+    <!-- HELP -->
+    <div id="section-help" class="wm-section">
+        <h2>Help & Support</h2>
+        <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid #8faad6;line-height:1.6">
+            <div style="margin-bottom:15px"><strong>How to earn?</strong><br>Login → Earn tab → Complete offers</div>
+            <div style="margin-bottom:15px"><strong>How to cashout?</strong><br>Go to Shop tab → Choose method → Withdraw</div>
+            <div>Contact: support@buxiq.com</div>
+        </div>
+    </div>
+</div>
+
+<div class="wm-footer">
+    <div class="wm-footer-button active" data-section="earn"><i class="fas fa-home"></i><span>Home</span></div>
+    <div class="wm-footer-button" data-section="shop"><i class="fas fa-shopping-bag"></i><span>Shop</span></div>
+    <div class="wm-footer-button" data-section="leaders"><i class="fas fa-trophy"></i><span>Leaders</span></div>
+    <div class="wm-footer-button" data-section="profile"><i class="fas fa-money-bill-wave"></i><span>Earn</span></div>
+    <div class="wm-footer-button" data-section="bonus"><i class="fas fa-star"></i><span>Bonus</span></div>
+    <div class="wm-footer-button" data-section="help"><i class="fas fa-question-circle"></i><span>Help</span></div>
+</div>
+
+<script>
+// YOUR DEPLOYED URL HERE
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyu6j6W7bkk6roMFBRnA1OUrq493xullbm5hf_PUQDYR5HRk9nZKY02QzHVYCrzjU0/exec';
+
+let captchaCode = '';
+let currentUser = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    generateCaptcha();
+    updateClock();
+    setInterval(updateClock, 1000);
+    setupTabs();
+    loadSettings();
+    loadLeaderboard();
+    loadShopOptions(); // Load real cashout options
+});
+
+function setupTabs() {
+    document.querySelectorAll('.wm-tab, .wm-footer-button').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('.wm-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.wm-tab, .wm-footer-button').forEach(t => t.classList.remove('active'));
+            const sec = el.dataset.section;
+            document.getElementById('section-' + sec).classList.add('active');
+            el.classList.add('active');
+            if (sec === 'leaders') loadLeaderboard();
+            if (sec === 'shop') loadShopOptions();
+        });
+    });
+
+    document.getElementById('loginButton').onclick = () => showSection('profile');
+    document.getElementById('loginFormButton').onclick = login;
+    document.getElementById('logoutBtn').onclick = logout;
+    document.getElementById('redeemBonusButton').onclick = redeemBonus;
+    document.querySelectorAll('[data-offer]').forEach(b => b.onclick = () => openOffer(b.dataset.offer));
+}
+
+function showSection(id) {
+    document.querySelectorAll('.wm-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('section-' + id).classList.add('active');
+}
+
+function generateCaptcha() {
+    captchaCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    document.getElementById('captcha').textContent = captchaCode;
+}
+
+function updateClock() {
+    const n = new Date();
+    document.getElementById('headerTime').textContent = n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const pst = new Date(n.getTime() - 8*3600000).toISOString().substr(11,5);
+    document.getElementById('serverTime').textContent = 'Server: ' + pst + ' PST';
+}
+
+async function login() {
+    const acc = document.getElementById('login-account').value.trim();
+    const cid = document.getElementById('login-clientid').value.trim();
+    const cap = document.getElementById('captchaInput').value.trim();
+    const err = document.getElementById('error-msg');
+
+    if (!acc || !cid || !cap) return err.textContent = 'Fill all fields', err.classList.remove('hidden');
+    if (cap !== captchaCode) return err.textContent = 'Wrong CAPTCHA', err.classList.remove('hidden'), generateCaptcha();
+
+    const btn = document.getElementById('loginFormButton');
+    btn.disabled = true; btn.textContent = 'Logging in...';
+
+    try {
+        const r = await fetch(`${GOOGLE_SCRIPT_URL}?action=login&account=${acc}&clientid=${cid}`);
+        const res = await r.json();
+        if (res.error) throw new Error(res.error);
+
+        currentUser = res.user;
+        localStorage.setItem('buxiq_acc', acc);
+        updateUI();
+        document.getElementById('login-container').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        loadShopOptions();
+        generateCaptcha();
+    } catch (e) {
+        err.textContent = e.message;
+        err.classList.remove('hidden');
+        generateCaptcha();
+    } finally {
+        btn.disabled = false; btn.textContent = 'Login Now';
+    }
+}
+
+function updateUI() {
+    if (!currentUser) return;
+    document.getElementById('userAvatar').src = currentUser.Avatar;
+    document.getElementById('userName').textContent = currentUser.Username;
+    document.getElementById('userBalance').textContent = '$' + Number(currentUser.Balance).toFixed(2);
+    document.getElementById('userLevel').textContent = currentUser.Level;
+    document.getElementById('userPoints').textContent = currentUser.Points;
+    document.getElementById('username').value = currentUser.Username;
+
+    const prog = (currentUser.Level % 10) * 10;
+    document.getElementById('levelProgress').style.width = prog + '%';
+    document.getElementById('levelProgressText').textContent = prog + '%';
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('buxiq_acc');
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('login-container').classList.remove('hidden');
+    document.getElementById('login-account').value = '';
+    document.getElementById('login-clientid').value = '';
+    document.getElementById('captchaInput').value = '';
+    updateUI();
+    generateCaptcha();
+    showSection('earn');
+}
+
+async function loadSettings() {
+    try {
+        const r = await fetch(GOOGLE_SCRIPT_URL + '?action=getSettings');
+        const d = await r.json();
+        if (!d.error) {
+            document.querySelector('#conversionRate center').textContent = `$1.00 = ${d.conversion_rate} pts`;
+            document.title = d.site_name + ' - Rewards';
+        }
+    } catch (e) { console.log('Settings failed'); }
+}
+
+async function loadLeaderboard() {
+    try {
+        const r = await fetch(GOOGLE_SCRIPT_URL + '?action=getLeaderboard');
+        const d = await r.json();
+        const tb = document.getElementById('leaderboardBody');
+        tb.innerHTML = '';
+        d.slice(0, 20).forEach((u, i) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${i+1}</td><td>${u.username}</td><td>$${Number(u.balance).toFixed(2)}</td><td>${u.level}</td>`;
+            tb.appendChild(tr);
+        });
+    } catch (e) {
+        document.getElementById('leaderboardBody').innerHTML = '<tr><td colspan="4">Offline</td></tr>';
+    }
+}
+
+async function loadShopOptions() {
+    const container = document.getElementById('shopContainer');
+    if (!currentUser) {
+        container.innerHTML = '<p style="text-align:center;padding:20px">Please login to see cashout options</p>';
+        return;
+    }
+
+    try {
+        const r = await fetch(GOOGLE_SCRIPT_URL + '?action=getCashoutOptions');
+        const options = await r.json();
+
+        let html = '';
+        options.forEach(opt => {
+            const canCashout = currentUser.Balance >= opt.minAmount;
+            html += `
+            <div class="shop-item" onclick="requestCashout('${opt.method}', ${opt.minAmount})">
+                <img src="${opt.icon}" alt="${opt.method}">
+                <div style="flex:1">
+                    <div class="shop-item-title">${opt.method}</div>
+                    <div class="shop-item-price">Min: $${opt.minAmount} • ${opt.time}</div>
+                </div>
+                <div class="wm-button primary" style="margin:0">
+                    ${canCashout ? 'Withdraw' : 'Locked'}
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html || '<p style="text-align:center">No payout methods available</p>';
+    } catch (e) {
+        container.innerHTML = '<p style="color:red">Error loading payouts</p>';
+    }
+}
+
+function requestCashout(method, minAmount) {
+    if (currentUser.Balance < minAmount) return alert('Insufficient balance!');
+
+    const amount = prompt(`Amount to withdraw ($${minAmount} - $${currentUser.Balance.toFixed(2)}):`, currentUser.Balance.toFixed(2));
+    if (!amount || Number(amount) < minAmount || Number(amount) > currentUser.Balance) return alert('Invalid amount');
+
+    const details = prompt(`Enter your ${method} email or wallet address:`);
+    if (!details) return;
+
+    if (!confirm(`Withdraw $${amount} via ${method}?`)) return;
+
+    fetch(`${GOOGLE_SCRIPT_URL}?action=requestCashout&username=${currentUser.Username}&method=${method}&details=${encodeURIComponent(details)}&amount=${amount}`)
+        .then(r => r.json())
+        .then(res => {
+            alert(res.success ? res.message : 'Error: ' + res.error);
+            if (res.success) {
+                currentUser.Balance = (currentUser.Balance - Number(amount)).toFixed(2);
+                updateUI();
+                loadShopOptions();
+            }
+        });
+}
+
+async function redeemBonus() {
+    const u = document.getElementById('username').value.trim();
+    const c = document.getElementById('bonusCode').value.trim().toUpperCase();
+    if (!u || !c) return alert('Fill both fields');
+
+    const btn = document.getElementById('redeemBonusButton');
+    btn.disabled = true; btn.textContent = 'Processing...';
+
+    try {
+        const r = await fetch(`${GOOGLE_SCRIPT_URL}?action=redeemBonus&username=${encodeURIComponent(u)}&bonusCode=${encodeURIComponent(c)}`);
+        const res = await r.json();
+
+        const msg = document.getElementById('bonus-message');
+        msg.className = res.success ? 'success-message' : 'error-message';
+        msg.textContent = res.message || res.error;
+        msg.classList.remove('hidden');
+
+        if (res.success) {
+            document.getElementById('amountLocal').value = (res.amountLocal || 0) + ' pts';
+            document.getElementById('amountUsd').value = '$' + res.amountUSD;
+            if (currentUser && currentUser.Username === u) {
+                currentUser.Balance = (Number(currentUser.Balance) + Number(res.amountUSD)).toFixed(2);
+                updateUI();
+            }
+        }
+    } catch (e) {
+        document.getElementById('bonus-message').textContent = 'Network error';
+        document.getElementById('bonus-message').className = 'error-message';
+        document.getElementById('bonus-message').classList.remove('hidden');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Redeem Now';
+    }
+}
+
+function openOffer(type) {
+    if (!currentUser) return alert('Login first!');
+    const urls = {
+        cpx: 'https://offers.cpx-research.com/',
+        spark: 'https://spark-wall.com/',
+        owm: 'https://offerwallmedia.com/',
+        adgem: 'https://adgem.com/'
+    };
+    window.open(urls[type], '_blank');
+}
+
+// Load shop when user logs in
+generateCaptcha();
+</script>
+</body>
+</html>
