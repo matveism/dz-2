@@ -4,327 +4,1542 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QuizBux - Earn Real Money</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #0f0f1e;
-      --card: #1a1a2e;
-      --primary: #667eea;
-      --accent: #764ba2;
-      --text: #e0e0ff;
-      --text2: #a0a0cc;
-      --success: #4ade80;
-      --danger: #f87171;
+        --primary: #1a73e8;
+        --primary-dark: #0d47a1;
+        --primary-light: #42a5f5;
+        --secondary: #2962ff;
+        --accent: #00e5ff;
+        --success: #00c853;
+        --warning: #ffab00;
+        --error: #ff1744;
+        --text-light: #ffffff;
+        --text-dim: #b0bec5;
+        --bg-gradient: linear-gradient(135deg, #0a192f 0%, #1e3a5f 50%, #0d2b4e 100%);
+        --bg-pattern: radial-gradient(circle at 20% 80%, rgba(66, 165, 245, 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(13, 71, 161, 0.15) 0%, transparent 50%),
+                      radial-gradient(circle at 40% 40%, rgba(30, 58, 95, 0.1) 0%, transparent 50%);
+        --bg-card: rgba(255, 255, 255, 0.08);
+        --bg-card-hover: rgba(255, 255, 255, 0.12);
+        --shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        --shadow-glow: 0 0 30px rgba(26, 115, 232, 0.3);
+        --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --border-glow: 1px solid rgba(66, 165, 245, 0.2);
+        --border-radius: 16px;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; }
-    .container { width:100%; max-width:420px; background:var(--card); border-radius:20px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.5); }
-    .header { background:linear-gradient(135deg,var(--primary),var(--accent)); padding:25px; text-align:center; color:white; }
-    .header img { height:45px; }
-    .content { padding:30px; }
-    input, textarea, select, button {
-      width:100%; padding:15px; margin:10px 0; border-radius:12px; border:none; font-size:16px;
+
+    * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+        font-family: 'Exo 2', 'Orbitron', sans-serif; 
     }
-    input, select, textarea { background:#16213e; color:white; }
-    button { background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; font-weight:bold; cursor:pointer; transition:0.3s; }
-    button:hover { transform:translateY(-3px); box-shadow:0 10px 20px rgba(102,126,234,0.4); }
-    button:disabled { opacity:0.5; cursor:not-allowed; }
-    .section { display:none; }
-    .active { display:block; }
-    .text-center { text-align:center; }
-    .mb-20 { margin-bottom:20px; }
-    .link { color:var(--primary); cursor:pointer; text-decoration:underline; }
-    .offerwall-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
-    .offer-btn { padding:20px; background:#16213e; border-radius:12px; text-align:center; color:white; }
-    .modal { position:fixed; inset:0; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; }
-    .modal.active { display:flex; }
-    .modal-content { background:var(--card); padding:30px; border-radius:20px; width:90%; max-width:400px; text-align:center; }
+
+    body { 
+        background: var(--bg-gradient), var(--bg-pattern); 
+        color: var(--text-light); 
+        min-height: 100vh; 
+        overflow-x: hidden;
+        line-height: 1.6;
+        font-weight: 400;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Loading Screen */
+    #loadingScreen { 
+        text-align: center; 
+        background: var(--bg-gradient), var(--bg-pattern);
+        padding: 40px;
+        border-radius: var(--border-radius);
+        backdrop-filter: blur(20px);
+        box-shadow: var(--shadow);
+        border: var(--border-glow);
+    }
+    #loadingScreen h2 { 
+        font-size: 2.5rem; 
+        background: linear-gradient(135deg, var(--accent), var(--primary-light));
+        -webkit-background-clip: text; 
+        background-clip: text;
+        color: transparent; 
+        margin-bottom: 1rem;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+    }
+
+    /* Main Container */
+    .main-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Auth Container */
+    .auth-container {
+        display: flex;
+        gap: 2rem;
+        max-width: 1000px;
+        width: 100%;
+    }
+
+    .auth-card {
+        flex: 1;
+        background: var(--bg-card);
+        backdrop-filter: blur(25px) saturate(180%);
+        border-radius: var(--border-radius);
+        padding: 3rem;
+        box-shadow: var(--shadow);
+        border: var(--border-glow);
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition);
+    }
+
+    .auth-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-glow);
+    }
+
+    .auth-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        background-size: 200% 100%;
+        animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { background-position: -200% 0; }
+        50% { background-position: 200% 0; }
+    }
+
+    .auth-card h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .auth-card p {
+        color: var(--text-dim);
+        margin-bottom: 2rem;
+        text-align: center;
+        font-size: 1.1rem;
+    }
+
+    .auth-input {
+        width: 100%;
+        padding: 1.2rem 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        color: var(--text-light);
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        transition: var(--transition);
+        outline: none;
+        backdrop-filter: blur(10px);
+        font-family: 'Exo 2', sans-serif;
+    }
+
+    .auth-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.3);
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .auth-btn {
+        width: 100%;
+        padding: 1.3rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow-glow);
+        margin-bottom: 1rem;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    .auth-btn:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(26, 115, 232, 0.5);
+    }
+
+    .auth-btn:disabled {
+        background: #666;
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .auth-switch {
+        text-align: center;
+        color: var(--text-dim);
+        margin-top: 1.5rem;
+    }
+
+    .auth-switch a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .auth-switch a:hover {
+        text-decoration: underline;
+        color: var(--primary-light);
+    }
+
+    /* Verification Code */
+    .verification-code {
+        display: flex;
+        gap: 0.8rem;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    .code-input {
+        width: 60px;
+        height: 70px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        color: var(--text-light);
+        transition: var(--transition);
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .code-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.3);
+        transform: scale(1.05);
+    }
+
+    /* Header */
+    #header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 2rem;
+        background: var(--bg-card);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: var(--border-radius);
+        margin: 1.5rem 0;
+        box-shadow: var(--shadow);
+        border: var(--border-glow);
+    }
+
+    #logo-img {
+        height: 50px;
+        border-radius: 12px;
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    #header button {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-light);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 600;
+        font-family: 'Exo 2', sans-serif;
+    }
+
+    #header button:hover {
+        background: var(--primary);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-glow);
+    }
+
+    /* Dashboard */
+    .profile {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        margin: 1.5rem 0;
+        box-shadow: var(--shadow);
+        border: var(--border-glow);
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 700;
+        box-shadow: var(--shadow-glow);
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .user-status {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .status-active {
+        background: var(--success);
+        color: white;
+    }
+
+    .status-suspended {
+        background: var(--error);
+        color: white;
+    }
+
+    .balance-container {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .balance-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        flex: 1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .balance-label {
+        font-size: 0.9rem;
+        color: var(--text-dim);
+        margin-bottom: 0.5rem;
+    }
+
+    .balance-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .nav {
+        display: flex;
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 1.5rem 0;
+        box-shadow: var(--shadow);
+        border: var(--border-glow);
+    }
+
+    .nav button {
+        flex: 1;
+        padding: 1.2rem;
+        background: transparent;
+        border: none;
+        color: var(--text-dim);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: 'Exo 2', sans-serif;
+    }
+
+    .nav button:hover, .nav button.active {
+        background: linear-gradient(135deg, rgba(26, 115, 232, 0.2), rgba(41, 98, 255, 0.2));
+        color: var(--text-light);
+    }
+
+    .page {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        border-radius: var(--border-radius);
+        padding: 2.5rem;
+        margin: 1.5rem 0;
+        box-shadow: var(--shadow);
+        min-height: 400px;
+        border: var(--border-glow);
+    }
+
+    .page h3 {
+        font-size: 1.8rem;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    /* Work Page */
+    .work-info {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--accent);
+    }
+
+    .work-info h4 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Offerwalls */
+    .offerwall-iframe {
+        width: 100%;
+        height: 600px;
+        border: none;
+        border-radius: 16px;
+        background: white;
+    }
+
+    .offerwall-item {
+        background: linear-gradient(135deg, rgba(10, 25, 47, 0.9), rgba(30, 58, 95, 0.9));
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(0, 229, 255, 0.15);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transition: var(--transition);
+    }
+
+    .offerwall-item:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 229, 255, 0.3);
+    }
+
+    .offerwall-requirements {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.8rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    .offerwall-requirements.unlocked {
+        background: rgba(0, 200, 83, 0.2);
+        border: 1px solid var(--success);
+    }
+
+    .offerwall-requirements.locked {
+        background: rgba(255, 23, 68, 0.2);
+        border: 1px solid var(--error);
+    }
+
+    .offerwall-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+
+    .offerwall-buttons button {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: 'Exo 2', sans-serif;
+    }
+
+    .offerwall-buttons button:first-child {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+    }
+
+    .offerwall-buttons button:last-child {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-light);
+    }
+
+    .offerwall-buttons button:disabled {
+        background: #555;
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .offerwall-buttons button:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+    }
+
+    .iframe-container {
+        position: relative;
+        margin: 2rem 0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+
+    .close-iframe {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 1000;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: var(--shadow);
+    }
+
+    /* Cashout Page */
+    .cashout-info {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--accent);
+    }
+
+    .cashout-info h4 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    .cashout-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Cashout History */
+    .cashout-history {
+        margin-top: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+
+    .cashout-item {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin: 0.8rem 0;
+        border-left: 4px solid var(--accent);
+    }
+
+    .cashout-status {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .status-pending {
+        background: var(--warning);
+        color: black;
+    }
+
+    .status-approved {
+        background: var(--success);
+        color: white;
+    }
+
+    .status-rejected {
+        background: var(--error);
+        color: white;
+    }
+
+    .admin-notes {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.8rem;
+        border-radius: 8px;
+        margin-top: 0.8rem;
+        font-size: 0.9rem;
+        color: var(--text-dim);
+    }
+
+    /* Chat System */
+    #chatToggle {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: none;
+        border-radius: 50%;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: var(--shadow-glow);
+        z-index: 1000;
+        transition: var(--transition);
+    }
+
+    #chatToggle:hover {
+        transform: scale(1.1);
+    }
+
+    #chatBox {
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        width: 350px;
+        height: 500px;
+        background: var(--bg-card);
+        backdrop-filter: blur(25px);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        border: var(--border-glow);
+        display: flex;
+        flex-direction: column;
+        z-index: 999;
+        transition: var(--transition);
+    }
+
+    .chat-header {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        padding: 1.2rem;
+        border-radius: 20px 20px 0 0;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 1.2rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .chat-message {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        max-width: 80%;
+        word-wrap: break-word;
+    }
+
+    .chat-message.own {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        align-self: flex-end;
+    }
+
+    .chat-message.other {
+        background: rgba(255, 255, 255, 0.15);
+        align-self: flex-start;
+    }
+
+    .message-sender {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: var(--accent);
+    }
+
+    .chat-input-container {
+        padding: 1.2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .chat-input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        resize: none;
+        outline: none;
+    }
+
+    .chat-input:focus {
+        border-color: var(--accent);
+    }
+
+    /* Alert Modal */
+    #alertModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(15px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    #alertModal .modal {
+        background: var(--bg-card);
+        backdrop-filter: blur(25px);
+        padding: 3rem;
+        border-radius: var(--border-radius);
+        max-width: 450px;
+        text-align: center;
+        box-shadow: var(--shadow), 0 0 40px rgba(26, 115, 232, 0.2);
+        border: var(--border-glow);
+    }
+
+    #alertModal button {
+        margin-top: 1.5rem;
+        padding: 1rem 2.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: none;
+        border-radius: 14px;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: 'Exo 2', sans-serif;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .auth-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .auth-card {
+            padding: 2rem;
+        }
+        
+        .verification-code {
+            gap: 0.5rem;
+        }
+        
+        .code-input {
+            width: 50px;
+            height: 60px;
+            font-size: 1.2rem;
+        }
+
+        #chatBox {
+            width: 300px;
+            height: 400px;
+            right: 20px;
+            bottom: 80px;
+        }
+
+        .header-buttons {
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        #header button {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .balance-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .profile {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .nav {
+            flex-direction: column;
+        }
+
+        .page {
+            padding: 1.5rem;
+        }
+    }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="header">
-    <img src="https://i.postimg.cc/8Cs0zjMq/Screenshot-2025-11-13-at-7-09-50-PM-removebg-preview.png" alt="QuizBux">
-    <h1>QuizBux</h1>
+  <!-- Loading -->
+  <div id="loadingScreen">
+    <h2>Loading QuizBux...</h2>
+    <p>Please wait</p>
   </div>
 
-  <div class="content">
-
-    <!-- LOGIN -->
-    <div id="loginSection" class="section active">
-      <h2 class="text-center mb-20">Welcome Back</h2>
-      <input type="text" id="loginUser" placeholder="Username" />
-      <input type="password" id="loginPass" placeholder="Password" />
-      <button onclick="login()">Login</button>
-      <p class="text-center mb-20"><span class="link" onclick="showSection('signupSection')">Create Account</span></p>
-    </div>
-
-    <!-- SIGNUP -->
-    <div id="signupSection" class="section">
-      <h2 class="text-center mb-20">Create Account</h2>
-      <input type="text" id="regUser" placeholder="Username" />
-      <input type="email" id="regEmail" placeholder="Email" />
-      <input type="password" id="regPass" placeholder="Password (min 6 chars)" />
-      <button onclick="signup()">Sign Up</button>
-      <p class="text-center"><span class="link" onclick="showSection('loginSection')">Back to Login</span></p>
-    </div>
-
-    <!-- VERIFY EMAIL -->
-    <div id="verifySection" class="section">
-      <h2 class="text-center mb-20">Verify Email</h2>
-      <p>We sent a 6-digit code to your email</p>
-      <input type="text" id="verifyCode" placeholder="Enter code" maxlength="6"/>
-      <button onclick="verifyEmail()">Verify</button>
-      <p class="text-center"><span class="link" onclick="resendCode()">Resend Code</span></p>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="section">
-      <h2>Hello, <span id="dashUser</span>!</h2>
-      <div style="background:#16213e;padding:15px;border-radius:12px;margin:20px 0;">
-        <div style="display:flex; justify-content:space-between;">
-          <div>Points: <b id="dashPoints">0</b></div>
-          <div>USD: <b id="dashUSD">$0.00</b></div>
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <div class="main-container">
+      <!-- Header -->
+      <header id="header">
+        <img id="logo-img" src="https://i.postimg.cc/nrzCgp87/Gemini-Generated-Image-rfo9ogrfo9ogrfo9-1-removebg-preview.png" alt="Logo">
+        <div class="header-buttons">
+          <button onclick="toggleChat()">💬 Chat</button>
+          <button onclick="showAlert('Support: contact@quizbux.com')">Help</button>
+          <button onclick="logout()">Logout</button>
         </div>
-      </div>
+      </header>
 
-      <button onclick="showSection('workSection')">Submit Work</button>
-      <button onclick="showSection('cashoutSection')">Cashout</button>
-      <button onclick="showSection('offerwallsSection')">Offerwalls</button>
-      <button onclick="logout()">Logout</button>
+      <!-- Auth Screens -->
+      <section id="authScreens">
+        <div class="auth-container">
+          <!-- Login Card -->
+          <div id="loginCard" class="auth-card">
+            <h1>Welcome Back</h1>
+            <p>Sign in to start earning</p>
+            <input type="text" id="loginUsername" class="auth-input" placeholder="Username" autocomplete="off">
+            <input type="password" id="loginPassword" class="auth-input" placeholder="Password" autocomplete="off">
+            <button class="auth-btn" onclick="login()">Login</button>
+            <div class="auth-switch">
+              Don't have an account? <a onclick="showSignup()">Sign up</a>
+            </div>
+          </div>
+
+          <!-- Signup Card -->
+          <div id="signupCard" class="auth-card hidden">
+            <h1>Create Account</h1>
+            <p>Join now to start earning</p>
+            <input type="text" id="signupUsername" class="auth-input" placeholder="Choose Username" autocomplete="off">
+            <input type="email" id="signupEmail" class="auth-input" placeholder="Email Address" autocomplete="off">
+            <input type="password" id="signupPassword" class="auth-input" placeholder="Create Password" autocomplete="off">
+            <button class="auth-btn" onclick="signup()">Create Account</button>
+            <div class="auth-switch">
+              Already have an account? <a onclick="showLogin()">Login</a>
+            </div>
+          </div>
+
+          <!-- Verification Card -->
+          <div id="verifyCard" class="auth-card hidden">
+            <h1>Verify Email</h1>
+            <p>We sent a 6-digit code to your email</p>
+            <div class="verification-code">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 1)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 2)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 3)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 4)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 5)">
+              <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 6)">
+            </div>
+            <button class="auth-btn" onclick="verifyEmail()">Verify Code</button>
+            <div class="auth-switch">
+              Didn't receive code? <a onclick="resendCode()">Resend</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard -->
+      <section id="dashboard" class="hidden">
+        <div class="profile">
+          <div class="avatar" id="userAvatar">U</div>
+          <div>
+            <h2 id="displayUsername">User <span id="userStatus" class="user-status status-active">Active</span></h2>
+            <div class="balance-container">
+              <div class="balance-item">
+                <div class="balance-label">Points Balance</div>
+                <div class="balance-value" id="balanceValue">0</div>
+              </div>
+              <div class="balance-item">
+                <div class="balance-label">USD Balance</div>
+                <div class="balance-value" id="usdBalanceValue">$0.0000</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button onclick="showPage('work')" class="active">Work</button>
+          <button onclick="showPage('offerwalls')">Offerwalls</button>
+          <button onclick="showPage('cashout')">Cashout</button>
+          <button onclick="showPage('terms')">Terms</button>
+        </nav>
+
+        <div id="pages">
+          <!-- Work Page -->
+          <div id="work" class="page">
+            <h3>Submit Your Work</h3>
+            <div class="work-info">
+              <h4>How it works</h4>
+              <p>Describe what you did today (e.g. completed surveys, watched videos, etc.)</p>
+              <p>Approved work = 50 Points + $0.001 USD</p>
+            </div>
+            <textarea id="workInput" class="auth-input" placeholder="Describe what you did today... (e.g. completed surveys, watched videos, etc.)" style="height: 160px;"></textarea>
+            <button class="auth-btn" onclick="submitWork()">Submit Work</button>
+          </div>
+
+          <!-- Offerwalls Page -->
+          <div id="offerwalls" class="page hidden">
+            <h3>Earn More with Offerwalls</h3>
+            <div id="offerwallList">
+              <p>Loading offerwalls...</p>
+            </div>
+            <div id="iframeContainer" class="iframe-container hidden">
+              <button class="close-iframe" onclick="closeIframe()">×</button>
+              <iframe id="offerwallFrame" class="offerwall-iframe" src="about:blank"></iframe>
+            </div>
+          </div>
+
+          <!-- Cashout Page -->
+          <div id="cashout" class="page hidden">
+            <h3>Request Cashout</h3>
+            <div class="cashout-info">
+              <h4>Cashout Information</h4>
+              <p>1 USD = 50,000 Points</p>
+              <p>1 USD = 1,000 Points (for conversion)</p>
+              <p>You need both Points & USD balance to cash out</p>
+            </div>
+            <div class="cashout-form">
+              <select id="rewardSelect" class="auth-input">
+                <option value="">Choose reward...</option>
+              </select>
+              <button id="cashoutBtn" class="auth-btn" onclick="submitCashout()" disabled>Request Cashout</button>
+            </div>
+
+            <!-- Cashout History -->
+            <div class="cashout-history">
+              <h4>Cashout History</h4>
+              <div id="cashoutHistory">
+                <p>Loading history...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms Page -->
+          <div id="terms" class="page hidden">
+            <div id="termsContent" style="text-align: left;"></div>
+          </div>
+        </div>
+      </section>
     </div>
-
-    <!-- SUBMIT WORK -->
-    <div id="workSection" class="section">
-      <h2>Submit Work</h2>
-      <textarea id="workText" placeholder="Write your submission here..." style="height:150px;resize:vertical;"></textarea>
-      <button onclick="submitWork()">Submit</button>
-      <p class="text-center"><span class="link" onclick="showSection('dashboard')">← Back</span></p>
-    </div>
-
-    <!-- CASHOUT -->
-    <div id="cashoutSection" class="section">
-      <h2>Request Cashout</h2>
-      <select id="rewardSelect">
-        <option value="">Select Reward</option>
-        <option value="paypal_5">PayPal $5.00</option>
-        <option value="paypal_10">PayPal $10.00</option>
-        <option value="amazon_1">Amazon £1 (~$1.39)</option>
-      </select>
-      <div id="cashoutInfo" style="margin:15px 0; padding:15px; background:#16213e; border-radius:12px; display:none;">
-        <b>You will receive: <span id="rewardName"></span></b><br>
-        Need: <span id="needUSD"></span> USD balance
-      </div>
-      <button onclick="requestCashout()" id="cashoutBtn" disabled>Request Cashout</button>
-      <p class="text-center"><span class="link" onclick="showSection('dashboard')">← Back</span></p>
-    </div>
-
-    <!-- OFFERWALLS -->
-    <div id="offerwallsSection" class="section">
-      <h2>Earn More</h2>
-      <div class="offerwall-grid" id="offerwallsList"></div>
-      <p class="text-center"><span class="link" onclick="showSection('dashboard')">← Back</span></p>
-    </div>
-
   </div>
-</div>
 
-<!-- MODALS -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <h3 id="modalTitle">Success</h3>
-    <p id="modalMsg">Done!</p>
-    <button onclick="closeModal()" style="margin-top:20px;">OK</button>
+  <!-- Chat System -->
+  <button id="chatToggle" class="hidden">💬</button>
+  <div id="chatBox" class="hidden">
+    <div class="chat-header">
+      <span>Support Chat</span>
+      <button class="chat-close" onclick="toggleChat()">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-message other">
+        <div class="message-sender">Support</div>
+        Welcome to QuizBux! How can we help you?
+      </div>
+    </div>
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." onkeypress="handleChatInput(event)">
+    </div>
   </div>
-</div>
 
-<script>
-  // YOUR REAL WEB APP URL HERE (CHANGE THIS!)
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTelvEYce1YEgw8-RDKth6xa_VJGRu2YOTxRMcgTGLuL6IXgO7tFG3xllYW4czAdbEEg/exec";
+  <!-- Alert Modal -->
+  <div id="alertModal" class="hidden">
+    <div class="modal">
+      <p id="alertMessage">Message</p>
+      <button onclick="closeAlert()">OK</button>
+    </div>
+  </div>
 
-  let currentUser = null;
-  let verifyData = null;
+  <!-- MAIN SCRIPT -->
+  <script>
+    // ⚠️ REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT DEPLOYMENT URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTelvEYce1YEgw8-RDKth6xa_VJGRu2YOTxRMcgTGLuL6IXgO7tFG3xllYW4czAdbEEg/exec";
 
-  function $(id) { return document.getElementById(id); }
+    let currentUser = null;
+    let pendingUser = null;
+    let chatInterval = null;
 
-  function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    $(id).classList.add('active');
-  }
-
-  function modal(title, msg) {
-    $('modalTitle').textContent = title;
-    $('modalMsg').textContent = msg;
-    $('modal').classList.add('active');
-  }
-
-  function closeModal() { $('modal').classList.remove('active'); }
-
-  async function api(action, data = {}) {
-    const fd = new FormData();
-    fd.append('action', action);
-    Object.keys(data).forEach(k => fd.append(k, data[k]));
-    const r = await fetch(SCRIPT_URL, { method: "POST", body: fd });
-    return await r.json();
-  }
-
-  // LOGIN
-  async function login() {
-    const u = $('loginUser').value.trim();
-    const p = $('loginPass').value;
-    if (!u || !p) return modal("Error", "Fill all fields");
-
-    const res = await api('login', {username: u, password: p});
-    if (res.status === "success") {
-      currentUser = res.user;
-      updateDash();
-      showSection('dashboard');
-    } else {
-      modal("Login Failed", res.message);
+    // Initialize the app
+    async function init() {
+      console.log('🚀 Initializing QuizBux...');
+      
+      try {
+        // Test connection first
+        const testResponse = await fetch(SCRIPT_URL + '?action=test');
+        const testData = await testResponse.json();
+        
+        if (testData.status === 'success') {
+          console.log('✅ Connection test successful');
+          
+          // Load configuration
+          const configResponse = await fetch(SCRIPT_URL + '?action=getConfig');
+          const config = await configResponse.json();
+          
+          if (config.status === 'success') {
+            applyConfig(config);
+          }
+          
+          // Show app
+          document.getElementById('loadingScreen').classList.add('hidden');
+          document.getElementById('app').classList.remove('hidden');
+          
+          // Try auto-login
+          const saved = localStorage.getItem('quizbux_user');
+          if (saved) {
+            const userData = JSON.parse(saved);
+            await restoreSession(userData.username);
+          }
+          
+        } else {
+          throw new Error('Connection test failed: ' + testData.message);
+        }
+        
+      } catch (error) {
+        console.error('❌ Initialization failed:', error);
+        showAlert('Failed to connect to server. Please check your internet connection and try again.');
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+      }
     }
-  }
 
-  // SIGNUP
-  async function signup() {
-    const u = $('regUser').value.trim();
-    const e = $('regEmail').value.trim();
-    const p = $('regPass').value;
-    if (!u || !e || !p) return modal("Error", "Fill all fields");
-    if (p.length < 6) return modal("Error", "Password min 6 chars");
-
-    const res = await api('signup', {username: u, email: e, password: p});
-    if (res.status === "success") {
-      verifyData = {username: u, email: e, password: p};
-      modal("Check Email", res.message);
-      showSection('verifySection');
-    } else {
-      modal("Signup Failed", res.message);
+    // Apply configuration from Google Sheets
+    function applyConfig(config) {
+      console.log('Applying config:', config);
+      
+      // Update texts
+      if (config.texts) {
+        if (config.texts.welcome_message) {
+          document.querySelector('#loginCard p').textContent = config.texts.welcome_message;
+          document.querySelector('#signupCard p').textContent = config.texts.welcome_message;
+        }
+        
+        if (config.texts.terms) {
+          document.getElementById('termsContent').innerHTML = config.texts.terms;
+        }
+      }
+      
+      // Update app name
+      if (config.app_name) {
+        document.title = config.app_name + ' - Earn Real Money';
+      }
+      
+      // Update logo
+      if (config.logo) {
+        document.getElementById('logo-img').src = config.logo;
+      }
+      
+      // Update offers
+      const select = document.getElementById('rewardSelect');
+      select.innerHTML = '<option value="">Choose reward...</option>';
+      
+      if (config.offers && config.offers.length > 0) {
+        config.offers.forEach(offer => {
+          const option = document.createElement('option');
+          option.value = offer.amount;
+          option.textContent = `${offer.name} ($${offer.amount.toFixed(2)})`;
+          select.appendChild(option);
+        });
+      }
+      
+      // Apply custom styles
+      if (config.styles) {
+        const styleElement = document.createElement('style');
+        styleElement.textContent = config.styles;
+        document.head.appendChild(styleElement);
+      }
+      
+      // Apply custom scripts
+      if (config.scripts) {
+        const scriptElement = document.createElement('script');
+        scriptElement.textContent = config.scripts;
+        document.body.appendChild(scriptElement);
+      }
     }
-  }
 
-  // VERIFY EMAIL
-  async function verifyEmail() {
-    const code = $('verifyCode').value.trim();
-    if (!code || code.length !== 6) return modal("Error", "Enter 6-digit code");
-
-    const res = await api('verifyEmail', {...verifyData, code});
-    if (res.status === "success") {
-      modal("Success", "Account verified! You can now login.");
-      showSection('loginSection');
-      verifyData = null;
-    } else {
-      modal("Error", res.message);
+    // Auth functions
+    function showLogin() {
+      document.getElementById('signupCard').classList.add('hidden');
+      document.getElementById('verifyCard').classList.add('hidden');
+      document.getElementById('loginCard').classList.remove('hidden');
     }
-  }
 
-  async function resendCode() {
-    if (!verifyData) return;
-    const res = await api('resendCode', {username: verifyData.username, email: verifyData.email});
-    modal(res.status === "success" ? "Sent" : "Error", res.message);
-  }
-
-  // DASHBOARD UPDATE
-  function updateDash() {
-    $('dashUser').textContent = currentUser.username;
-    $('dashPoints').textContent = currentUser.balance;
-    $('dashUSD').textContent = "$" + Number(currentUser.balanceUSD).toFixed(2);
-  }
-
-  // SUBMIT WORK
-  async function submitWork() {
-    const text = $('workText').value.trim();
-    if (!text) return modal("Error", "Write something");
-
-    const res = await api('submitWork', {username: currentUser.username, submission: text});
-    modal(res.status === "success" ? "Success" : "Error", res.message);
-    if (res.status === "success") {
-      $('workText').value = '';
-      const u = await api('getUserData', {username: currentUser.username});
-      if (u.status === "success") currentUser = u.user;
-      updateDash();
+    function showSignup() {
+      document.getElementById('loginCard').classList.add('hidden');
+      document.getElementById('verifyCard').classList.add('hidden');
+      document.getElementById('signupCard').classList.remove('hidden');
     }
-  }
 
-  // CASHOUT
-  async function requestCashout() {
-    const sel = $('rewardSelect');
-    const id = sel.value;
-    if (!id) return;
-
-    const name = sel.selectedOptions[0].text;
-    const amount = parseFloat(id.split('_')[1]) || 1.39;
-
-    const res = await api('submitCashout', {
-      username: currentUser.username,
-      reward: name,
-      amount: amount
-    });
-
-    modal(res.status === "success" ? "Success" : "Error", res.message);
-    if (res.status === "success") {
-      const u = await api('getUserData', {username: currentUser.username});
-      if (u.status === "success") currentUser = u.user;
-      updateDash();
-      sel.value = "";
-      $('cashoutInfo').style.display = 'none';
-      $('cashoutBtn').disabled = true;
+    function showVerification() {
+      document.getElementById('loginCard').classList.add('hidden');
+      document.getElementById('signupCard').classList.add('hidden');
+      document.getElementById('verifyCard').classList.remove('hidden');
+      document.querySelectorAll('.code-input').forEach(input => input.value = '');
+      document.querySelector('.code-input').focus();
     }
-  }
 
-  $('rewardSelect').addEventListener('change', () => {
-    const sel = $('rewardSelect');
-    if (!sel.value) {
-      $('cashoutInfo').style.display = 'none';
-      $('cashoutBtn').disabled = true;
-      return;
+    function moveToNext(input, nextIndex) {
+      if (input.value.length === 1) {
+        const nextInput = document.querySelectorAll('.code-input')[nextIndex];
+        if (nextInput) nextInput.focus();
+      }
     }
-    const name = sel.selectedOptions[0].text;
-    const amount = sel.value.includes('amazon') ? 1.39 : parseFloat(sel.value.split('_')[1]);
-    $('rewardName').textContent = name;
-    $('needUSD').textContent = "$" + amount.toFixed(2);
-    $('cashoutInfo').style.display = 'block';
-    $('cashoutBtn').disabled = currentUser.balanceUSD < amount;
-  });
 
-  // OFFERWALLS
-  async function loadOfferwalls() {
-    const res = await api('getOfferwalls', {username: currentUser.username});
-    if (res.status !== "success") return;
+    async function signup() {
+      const username = document.getElementById('signupUsername').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
 
-    const list = $('offerwallsList');
-    list.innerHTML = "";
-    res.offerwalls.forEach(w => {
-      const div = document.createElement('div');
-      div.className = "offer-btn";
-      div.innerHTML = `<i class="fas fa-gift" style="font-size:24px;margin-bottom:8px;"></i><br>${w.name}`;
-      div.onclick = () => {
-        window.open(w.url, '_blank');
-      };
-      list.appendChild(div);
-    });
-  }
+      if (!username || !email || !password) {
+        return showAlert('Please fill all fields');
+      }
 
-  // AUTO LOAD OFFERWALLS WHEN OPENING SECTION
-  const orig = showSection;
-  showSection = function(id) {
-    orig(id);
-    if (id === 'offerwallsSection' && currentUser) loadOfferwalls();
-  };
+      if (username.length < 3) {
+        return showAlert('Username must be at least 3 characters');
+      }
 
-  // LOGOUT
-  function logout() {
-    currentUser = null;
-    showSection('loginSection');
-    modal("Logged Out", "See you soon!");
-  }
+      if (password.length < 6) {
+        return showAlert('Password must be at least 6 characters');
+      }
 
-  // TEST ACCOUNT AUTO-FILL (remove in production)
-  if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
-    $('loginUser').value = "test";
-    $('loginPass').value = "123";
-  }
-</script>
+      const formData = new FormData();
+      formData.append('action', 'signup');
+      formData.append('username', username);
+      formData.append('email', email);
+      formData.append('password', password);
+
+      try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          pendingUser = { username, email, password };
+          showVerification();
+          showAlert('Verification code sent to your email!');
+        } else {
+          showAlert(data.message || 'Signup failed');
+        }
+      } catch (error) {
+        console.error('Signup error:', error);
+        showAlert('Network error. Please try again.');
+      }
+    }
+
+    async function verifyEmail() {
+      const codeInputs = document.querySelectorAll('.code-input');
+      const code = Array.from(codeInputs).map(input => input.value).join('');
+
+      if (code.length !== 6) {
+        return showAlert('Please enter the 6-digit code');
+      }
+
+      const formData = new FormData();
+      formData.append('action', 'verifyEmail');
+      formData.append('username', pendingUser.username);
+      formData.append('email', pendingUser.email);
+      formData.append('password', pendingUser.password);
+      formData.append('code', code);
+
+      try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          showAlert('Account verified successfully! You can now login.');
+          showLogin();
+          pendingUser = null;
+        } else {
+          showAlert(data.message || 'Verification failed');
+        }
+      } catch (error) {
+        console.error('Verification error:', error);
+        showAlert('Network error. Please try again.');
+      }
+    }
+
+    async function resendCode() {
+      if (!pendingUser) return;
+
+      const formData = new FormData();
+      formData.append('action', 'resendCode');
+      formData.append('username', pendingUser.username);
+      formData.append('email', pendingUser.email);
+
+      try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          showAlert('New verification code sent!');
+        } else {
+          showAlert(data.message || 'Failed to resend code');
+        }
+      } catch (error) {
+        console.error('Resend code error:', error);
+        showAlert('Network error. Please try again.');
+      }
+    }
+
+    async function login() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!username || !password) {
+        return showAlert('Please fill all fields');
+      }
+
+      const formData = new FormData();
+      formData.append('action', 'login');
+      formData.append('username', username);
+      formData.append('password', password);
+
+      try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          currentUser = data.user;
+          localStorage.setItem('quizbux_user', JSON.stringify({ username }));
+          showDashboard();
+          loadOfferwalls();
+          loadCashoutHistory();
+          showAlert('Login successful! Welcome back.');
+        } else {
+          showAlert(data.message || 'Login failed');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        showAlert('Network error. Please check your connection and try again.');
+      }
+    }
+
+    async function restoreSession(username) {
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=getUserData&username=' + encodeURIComponent(username));
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+          currentUser = data.user;
+          showDashboard();
+          loadOfferwalls();
+          loadCashoutHistory();
+        } else {
+          localStorage.removeItem('quizbux_user');
+        }
+      } catch (error) {
+        console.error('Restore session error:', error);
+        localStorage.removeItem('quizbux_user');
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById('authScreens').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('chatToggle').classList.remove('hidden');
+
+      document.getElementById('displayUsername').textContent = currentUser.username;
+      document.getElementById('userAvatar').textContent = currentUser.username[0].toUpperCase();
+      document.getElementById('balanceValue').textContent = Number(currentUser.balance).toLocaleString();
+      document.getElementById('usdBalanceValue').textContent = '$' + Number(currentUser.balanceUSD).toFixed(4);
+
+      // Update user status
+      const statusElement = document.getElementById('userStatus');
+      statusElement.textContent = currentUser.status || 'Active';
+      statusElement.className = `user-status status-${(currentUser.status || 'active').toLowerCase()}`;
+
+      showPage('work');
+    }
+
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      
+      // Update active nav button
+      document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.nav button[onclick="showPage('${id}')"]`).classList.add('active');
+      
+      if (id === 'offerwalls') loadOfferwalls();
+      if (id === 'cashout') loadCashoutHistory();
+    }
+
+    async function loadOfferwalls() {
+      if (!currentUser) return;
+      
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=getOfferwalls&username=' + currentUser.username);
+        const data = await response.json();
+        const container = document.getElementById('offerwallList');
+        
+        if (data.status === 'success' && data.offerwalls && data.offerwalls.length > 0) {
+          container.innerHTML = data.offerwalls.map(wall => {
+            const hasEnoughPoints = currentUser.balance >= (wall.pointsRequired || 0);
+            const isUnlocked = hasEnoughPoints && (wall.status === 'active');
+            
+            return `
+              <div class="offerwall-item">
+                <h4>${wall.name}</h4>
+                <p>Complete offers to earn rewards</p>
+                <div class="offerwall-requirements ${isUnlocked ? 'unlocked' : 'locked'}">
+                  ${isUnlocked ? 
+                    '✅ Unlocked - Ready to earn!' : 
+                    `🔒 Requires ${wall.pointsRequired || 0} points to unlock (You have ${currentUser.balance})`
+                  }
+                </div>
+                <div class="offerwall-buttons">
+                  <button onclick="openOfferwallInIframe('${wall.id}', '${wall.url}')" 
+                          ${!isUnlocked ? 'disabled' : ''}>
+                    Open in App
+                  </button>
+                  <button onclick="window.open('${wall.url}', '_blank')" 
+                          ${!isUnlocked ? 'disabled' : ''}>
+                    Open in New Tab
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          container.innerHTML = '<p>No active offerwalls right now</p>';
+        }
+      } catch (error) {
+        console.error('Load offerwalls error:', error);
+        document.getElementById('offerwallList').innerHTML = '<p>Error loading offerwalls</p>';
+      }
+    }
+
+    function openOfferwallInIframe(offerwallId, url) {
+      const iframe = document.getElementById('offerwallFrame');
+      const iframeContainer = document.getElementById('iframeContainer');
+      const offerwallList = document.getElementById('offerwallList');
+      
+      iframe.src = url;
+      iframeContainer.classList.remove('hidden');
+      offerwallList.classList.add('hidden');
+    }
+
+    function closeIframe() {
+      const iframeContainer = document.getElementById('iframeContainer');
+      const offerwallList = document.getElementById('offerwallList');
+      const iframe = document.getElementById('offerwallFrame');
+      
+      iframeContainer.classList.add('hidden');
+      offerwallList.classList.remove('hidden');
+      iframe.src = 'about:blank';
+    }
+
+    async function submitWork() {
+      if (!currentUser) return;
+
+      const text = document.getElementById('workInput').value.trim();
+      if (!text) return showAlert('Please write something');
+
+      const formData = new FormData();
+      formData.append('action', 'submitWork');
+      formData.append('username', currentUser.username);
+      formData.append('submission', text);
+
+      try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const data = await response.json();
+        showAlert(data.message);
+        document.getElementById('workInput').value = '';
+      } catch (error) {
+        console.error('Submit work error:', error);
+        showAlert('Network error. Please try again.');
+      }
+    }
+
+    async function submitCashout() {
+      if (!currentUser) return;
+
+      const amount = document.getElementById('rewardSelect').value;
+      if (!amount) return showAlert('Please select a reward');
+
+      const reward = document.getElementById('rewardSelect').selectedOptions[0].text;
+
+      const formData = new FormData();
+      formData.append('action', 'submitCashout');
+      formData.append('username', currentUser.username);
+      formData.append('reward', reward);
+      formData.append('amount', amount);
+
+      try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const data = await response.json();
+        showAlert(data.message);
+
+        document.getElementById('rewardSelect').value = '';
+        document.getElementById('cashoutBtn').disabled = true;
+        loadCashoutHistory();
+      } catch (error) {
+        console.error('Submit cashout error:', error);
+        showAlert('Network error. Please try again.');
+      }
+    }
+
+    async function loadCashoutHistory() {
+      if (!currentUser) return;
+      
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=getCashoutHistory&username=' + currentUser.username);
+        const data = await response.json();
+        const container = document.getElementById('cashoutHistory');
+        
+        if (data.status === 'success' && data.history && data.history.length > 0) {
+          container.innerHTML = data.history.map(item => `
+            <div class="cashout-item">
+              <strong>${item.reward}</strong> - $${item.amount} 
+              <span class="cashout-status status-${item.status.toLowerCase()}">${item.status}</span>
+              <div style="font-size: 0.9rem; color: var(--text-dim); margin-top: 0.5rem;">
+                ${new Date(item.date).toLocaleDateString()}
+              </div>
+              ${item.adminNotes ? `
+                <div class="admin-notes">
+                  <strong>Admin Notes:</strong> ${item.adminNotes}
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = '<p>No cashout history yet.</p>';
+        }
+      } catch (error) {
+        console.error('Load cashout history error:', error);
+        document.getElementById('cashoutHistory').innerHTML = '<p>Error loading history</p>';
+      }
+    }
+
+    // Chat system
+    function toggleChat() {
+      const chatBox = document.getElementById('chatBox');
+      const chatToggle = document.getElementById('chatToggle');
+      
+      if (chatBox.classList.contains('hidden')) {
+        chatBox.classList.remove('hidden');
+        chatToggle.textContent = '✖';
+        loadChatMessages();
+        startChatPolling();
+      } else {
+        chatBox.classList.add('hidden');
+        chatToggle.textContent = '💬';
+        stopChatPolling();
+      }
+    }
+
+    function handleChatInput(event) {
+      if (event.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    async function sendChatMessage() {
+      if (!currentUser) return;
+
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      const formData = new FormData();
+      formData.append('action', 'sendChatMessage');
+      formData.append('username', currentUser.username);
+      formData.append('message', message);
+
+      try {
+        await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        input.value = '';
+        loadChatMessages();
+      } catch (error) {
+        console.error('Send chat message error:', error);
+        showAlert('Failed to send message');
+      }
+    }
+
+    async function loadChatMessages() {
+      if (!currentUser) return;
+      
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=getChatMessages');
+        const data = await response.json();
+        const container = document.getElementById('chatMessages');
+        
+        if (data.status === 'success') {
+          container.innerHTML = data.messages.map(msg => `
+            <div class="chat-message ${msg.username === currentUser.username ? 'own' : 'other'}">
+              <div class="message-sender">${msg.username}</div>
+              ${msg.message}
+            </div>
+          `).join('');
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (error) {
+        console.error('Load chat messages error:', error);
+      }
+    }
+
+    function startChatPolling() {
+      chatInterval = setInterval(loadChatMessages, 3000);
+    }
+
+    function stopChatPolling() {
+      if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('quizbux_user');
+      if (chatInterval) clearInterval(chatInterval);
+      location.reload();
+    }
+
+    function showAlert(msg) {
+      document.getElementById('alertMessage').textContent = msg;
+      document.getElementById('alertModal').classList.remove('hidden');
+    }
+
+    function closeAlert() {
+      document.getElementById('alertModal').classList.add('hidden');
+    }
+
+    // Initialize cashout button
+    document.getElementById('rewardSelect').onchange = function() {
+      document.getElementById('cashoutBtn').disabled = !this.value;
+    };
+
+    // Start the app
+    window.onload = init;
+  </script>
 </body>
 </html>
